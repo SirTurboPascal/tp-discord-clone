@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { FunctionComponent } from 'react';
 
+import { Sidebar } from '../components/Sidebar';
+
 const StyledHomePage = styled.div`
 	display: flex;
 	flex-direction: row;
@@ -21,7 +23,7 @@ const HomePage: FunctionComponent = (props) => {
 	return (
 		<>
 			<StyledHomePage>
-				<h1>Discord Clone</h1>
+				<Sidebar />
 			</StyledHomePage>
 		</>
 	);
