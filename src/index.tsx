@@ -1,5 +1,7 @@
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import HomePage from './pages/HomePage';
 import { CssBaseline } from './components/CssBaseline';
 
 const App = () => {
@@ -7,9 +9,21 @@ const App = () => {
 		<>
 			<CssBaseline />
 
-			<h1>Discord Clone</h1>
+			<Routes>
+				<Route path='/' element={<HomePage />} />
+			</Routes>
 		</>
 	);
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const AppWrapper = () => {
+	return (
+		<>
+			<BrowserRouter>
+				<App />
+			</BrowserRouter>
+		</>
+	);
+};
+
+ReactDOM.render(<AppWrapper />, document.getElementById('root'));
