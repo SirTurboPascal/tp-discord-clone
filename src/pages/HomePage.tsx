@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FunctionComponent } from 'react';
 
+import { Header, HeaderTitle } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 
 const StyledHomePage = styled.div`
@@ -23,7 +24,11 @@ const HomePage: FunctionComponent = (props) => {
 	return (
 		<>
 			<StyledHomePage>
-				<Sidebar />
+				<Sidebar>
+					<Header>
+						<HeaderTitle>Discord Clone</HeaderTitle>
+					</Header>
+				</Sidebar>
 			</StyledHomePage>
 		</>
 	);
