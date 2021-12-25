@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage';
 import { CssBaseline } from './components/CssBaseline';
 
 import store from './store';
+import './lib/firebase';
 
 const App = () => {
 	return (

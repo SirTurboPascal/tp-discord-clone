@@ -1,9 +1,12 @@
 import styled from 'styled-components';
-import { FunctionComponent } from 'react';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import { FunctionComponent, useEffect } from 'react';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { useAppStore } from '../hooks';
+import IUser from '../interfaces/IUser';
+import { setActiveUser } from '../store/slices/userSlice';
+import { useAppDispatch, useAppStore } from '../hooks';
 
 import { Chat } from '../components/Chat';
 import { Header, HeaderButton, HeaderTitle } from '../components/Header';
@@ -26,11 +29,48 @@ const StyledHomePage = styled.div`
 `;
 
 const HomePage: FunctionComponent = () => {
+	const dispatch = useAppDispatch();
+
 	const { activeUser } = useAppStore((state) => state.user);
 
 	const handleButtonClick = () => {
 		alert('Hello World!');
 	};
+
+	/**
+	 * This function triggers a request for authentication on the side of the corresponding
+	 * method. In case of an error, it is displayed in a popup.
+	 */
+	const handleSignInButtonClick = () => {
+		signInWithPopup(getAuth(), new GoogleAuthProvider()).catch((error) => {
+			alert(error);
+		});
+	};
+
+	/**
+	 * This hook observes the status of authentication and its changes.
+	 * If a user is detected, it is written to the global store, otherwise it is removed.
+	 */
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+			if (!user) {
+				dispatch(setActiveUser(undefined));
+
+				return;
+			}
+
+			const { displayName, photoURL, uid } = user;
+			const activeUser: IUser = {
+				uid: uid,
+				displayName: displayName ? displayName : undefined,
+				photoUrl: photoURL ? photoURL : undefined,
+			};
+
+			dispatch(setActiveUser(activeUser));
+		});
+
+		return () => unsubscribe();
+	}, [dispatch]);
 
 	return (
 		<>
@@ -53,7 +93,7 @@ const HomePage: FunctionComponent = () => {
 
 						{!activeUser && (
 							<>
-								<HeaderButton caption='Log in' onClick={handleButtonClick} />
+								<HeaderButton caption='Log in' onClick={handleSignInButtonClick} />
 							</>
 						)}
 					</Header>
