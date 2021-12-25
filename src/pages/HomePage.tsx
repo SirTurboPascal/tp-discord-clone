@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { FunctionComponent } from 'react';
 
-import { Header, HeaderTitle } from '../components/Header';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
+import { Header, HeaderButton, HeaderTitle } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 
 const StyledHomePage = styled.div`
@@ -21,12 +23,18 @@ const StyledHomePage = styled.div`
 `;
 
 const HomePage: FunctionComponent = (props) => {
+	const handleButtonClick = () => {
+		alert('Hello World!');
+	};
+
 	return (
 		<>
 			<StyledHomePage>
 				<Sidebar>
 					<Header>
 						<HeaderTitle>Discord Clone</HeaderTitle>
+
+						<HeaderButton icon={faPlus} onClick={handleButtonClick} />
 					</Header>
 				</Sidebar>
 			</StyledHomePage>
