@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { FunctionComponent, useEffect } from 'react';
 
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 import IUser from '../interfaces/IUser';
 import { setActiveUser } from '../store/slices/userSlice';
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppStore } from '../hooks';
 import { Chat } from '../components/Chat';
 import { Header, HeaderButton, HeaderTitle } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
+import { UserSection, UserSectionButton } from '../components/UserSection';
 
 const StyledHomePage = styled.div`
 	display: flex;
@@ -43,6 +44,20 @@ const HomePage: FunctionComponent = () => {
 	 */
 	const handleSignInButtonClick = () => {
 		signInWithPopup(getAuth(), new GoogleAuthProvider()).catch((error) => {
+			alert(error);
+		});
+	};
+
+	/**
+	 * This function triggers a request for signing out on the sides of the corresponding
+	 * method. In case of an error, it is displayed in a popup.
+	 */
+	const handleSignOutButtonClick = () => {
+		if (!window.confirm('Are you sure you want to sign out?')) {
+			return;
+		}
+
+		signOut(getAuth()).catch((error) => {
 			alert(error);
 		});
 	};
@@ -85,6 +100,16 @@ const HomePage: FunctionComponent = () => {
 							</>
 						)}
 					</Header>
+
+					<div style={{ flexGrow: 1 }} />
+
+					{activeUser && (
+						<>
+							<UserSection user={activeUser}>
+								<UserSectionButton icon={faSignOutAlt} onClick={handleSignOutButtonClick} />
+							</UserSection>
+						</>
+					)}
 				</Sidebar>
 
 				<Chat>
