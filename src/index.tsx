@@ -1,17 +1,17 @@
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Provider } from 'react-redux';
 
 import HomePage from './pages/HomePage';
 import { CssBaseline } from './components/CssBaseline';
+
+import store from './store';
 
 const App = () => {
 	return (
 		<>
 			<CssBaseline />
 
-			<Routes>
-				<Route path='/' element={<HomePage />} />
-			</Routes>
+			<HomePage />
 		</>
 	);
 };
@@ -19,9 +19,9 @@ const App = () => {
 const AppWrapper = () => {
 	return (
 		<>
-			<BrowserRouter>
+			<Provider store={store}>
 				<App />
-			</BrowserRouter>
+			</Provider>
 		</>
 	);
 };
