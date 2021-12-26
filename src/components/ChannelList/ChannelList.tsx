@@ -29,7 +29,6 @@ const StyledChannelList = styled.ul`
 
 const ChannelList: FunctionComponent = () => {
 	const dispatch = useAppDispatch();
-
 	const [listChannels, setListChannels] = useState<IChannel[]>([]);
 
 	useEffect(() => {

@@ -127,7 +127,6 @@ interface ChannelListItemProps {
 
 const ChannelListItem: FunctionComponent<ChannelListItemProps> = (props) => {
 	const dispatch = useAppDispatch();
-
 	const { activeUser } = useAppStore((state) => state.user);
 	const { selectedChannel } = useAppStore((state) => state.channel);
 

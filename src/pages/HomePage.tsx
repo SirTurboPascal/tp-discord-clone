@@ -23,6 +23,8 @@ import { useAppDispatch, useAppStore } from '../hooks';
 import { ChannelList } from '../components/ChannelList';
 import { Chat } from '../components/Chat';
 import { Header, HeaderButton, HeaderIcon, HeaderTitle } from '../components/Header';
+import { MessageBox } from '../components/MessageBox';
+import { MessageList } from '../components/MessageList';
 import { Sidebar } from '../components/Sidebar';
 import { UserSection, UserSectionButton } from '../components/UserSection';
 
@@ -163,6 +165,13 @@ const HomePage: FunctionComponent = () => {
 							</>
 						)}
 					</Header>
+
+					{activeUser && selectedChannel && (
+						<>
+							<MessageList />
+							<MessageBox />
+						</>
+					)}
 				</Chat>
 			</StyledHomePage>
 		</>
