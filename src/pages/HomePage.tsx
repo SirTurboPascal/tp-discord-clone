@@ -52,10 +52,6 @@ const HomePage: FunctionComponent = () => {
 		alert('Hello World!');
 	};
 
-	/**
-	 * This function adds a new document to the collection of channels.
-	 * If an error occurs, it will be displayed in a popup.
-	 */
 	const handleAddButtonClick = () => {
 		if (!activeUser) {
 			return;
@@ -74,20 +70,12 @@ const HomePage: FunctionComponent = () => {
 		}).catch((error) => alert(error));
 	};
 
-	/**
-	 * This function triggers a request for authentication on the side of the corresponding
-	 * method. In case of an error, it is displayed in a popup.
-	 */
 	const handleSignInButtonClick = () => {
 		signInWithPopup(getAuth(), new GoogleAuthProvider()).catch((error) => {
 			alert(error);
 		});
 	};
 
-	/**
-	 * This function triggers a request for signing out on the sides of the corresponding
-	 * method. In case of an error, it is displayed in a popup.
-	 */
 	const handleSignOutButtonClick = () => {
 		if (!window.confirm('Are you sure you want to sign out?')) {
 			return;
@@ -98,10 +86,6 @@ const HomePage: FunctionComponent = () => {
 		});
 	};
 
-	/**
-	 * This hook observes the status of authentication and its changes.
-	 * If a user is detected, it is written to the global store, otherwise it is removed.
-	 */
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
 			if (!user) {

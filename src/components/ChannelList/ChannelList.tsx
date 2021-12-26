@@ -3,6 +3,8 @@ import { collection, getFirestore, onSnapshot, orderBy, query } from 'firebase/f
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import IChannel from '../../interfaces/IChannel';
+import { setSelectedChannel } from '../../store/slices/channelSlice';
+import { useAppDispatch } from '../../hooks';
 
 import { ChannelListItem } from '.';
 
@@ -26,17 +28,21 @@ const StyledChannelList = styled.ul`
 `;
 
 const ChannelList: FunctionComponent = () => {
+	const dispatch = useAppDispatch();
+
 	const [listChannels, setListChannels] = useState<IChannel[]>([]);
 
-	/**
-	 * This hook observes changes in the collection of channels in
-	 * the database, including basic CRUD operations.
-	 */
 	useEffect(() => {
 		const channelsRef = collection(getFirestore(), 'channels');
 
 		const unsubscribe = onSnapshot(query(channelsRef, orderBy('timestamp')), (docs) => {
 			const snapshot: IChannel[] = [];
+
+			docs.docChanges().forEach((docChange) => {
+				if (docChange.type === 'removed') {
+					dispatch(setSelectedChannel(undefined));
+				}
+			});
 
 			docs.forEach((doc) => {
 				const id = doc.id;
@@ -49,7 +55,7 @@ const ChannelList: FunctionComponent = () => {
 		});
 
 		return () => unsubscribe();
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<>
