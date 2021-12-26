@@ -13,7 +13,7 @@ const StyledHeader = styled.header`
 	border-bottom: 1px solid #d0d1d3;
 
 	& > * {
-		margin-right: 4px;
+		margin-right: 8px;
 
 		&:last-child {
 			margin-right: 0;

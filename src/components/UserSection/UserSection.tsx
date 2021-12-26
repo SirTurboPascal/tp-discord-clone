@@ -17,7 +17,7 @@ const StyledUserSection = styled.footer`
 	background-color: #ebedef;
 
 	& > * {
-		margin-right: 8px;
+		margin-right: 4px;
 
 		&:last-child {
 			margin-right: 0;
@@ -35,8 +35,10 @@ const StyledUserContainer = styled.div`
 	flex-grow: 1;
 	justify-content: stretch;
 
+	margin-left: 4px;
+
 	overflow: hidden;
-	cursor: pointer;
+	cursor: default;
 	user-select: none;
 `;
 
@@ -72,16 +74,12 @@ interface UserSectionProps {
 }
 
 const UserSection: FunctionComponent<UserSectionProps> = (props) => {
-	const handleUserContainerClick = () => {
-		navigator.clipboard.writeText(props.user.uid);
-	};
-
 	return (
 		<>
 			<StyledUserSection>
 				<Avatar photoUrl={props.user.photoUrl} />
 
-				<StyledUserContainer onClick={handleUserContainerClick}>
+				<StyledUserContainer>
 					{props.user.displayName && (
 						<>
 							<StyledUserName>{props.user.displayName}</StyledUserName>

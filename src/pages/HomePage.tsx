@@ -1,15 +1,28 @@
 import styled from 'styled-components';
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { addDoc, collection, getFirestore, Timestamp } from 'firebase/firestore';
 import { FunctionComponent, useEffect } from 'react';
 
-import { faPlus, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+	faBell,
+	faCog,
+	faHashtag,
+	faInbox,
+	faPlus,
+	faQuestionCircle,
+	faSignOutAlt,
+	faThumbtack,
+	faUserFriends,
+} from '@fortawesome/free-solid-svg-icons';
 
 import IUser from '../interfaces/IUser';
+import { setSelectedChannel } from '../store/slices/channelSlice';
 import { setActiveUser } from '../store/slices/userSlice';
 import { useAppDispatch, useAppStore } from '../hooks';
 
+import { ChannelList } from '../components/ChannelList';
 import { Chat } from '../components/Chat';
-import { Header, HeaderButton, HeaderTitle } from '../components/Header';
+import { Header, HeaderButton, HeaderIcon, HeaderTitle } from '../components/Header';
 import { Sidebar } from '../components/Sidebar';
 import { UserSection, UserSectionButton } from '../components/UserSection';
 
@@ -33,9 +46,32 @@ const HomePage: FunctionComponent = () => {
 	const dispatch = useAppDispatch();
 
 	const { activeUser } = useAppStore((state) => state.user);
+	const { selectedChannel } = useAppStore((state) => state.channel);
 
 	const handleButtonClick = () => {
 		alert('Hello World!');
+	};
+
+	/**
+	 * This function adds a new document to the collection of channels.
+	 * If an error occurs, it will be displayed in a popup.
+	 */
+	const handleAddButtonClick = () => {
+		if (!activeUser) {
+			return;
+		}
+
+		const newChannelName = prompt('Please enter a name for the new channel.', 'new-channel');
+		if (!newChannelName) {
+			return;
+		}
+
+		addDoc(collection(getFirestore(), 'channels'), {
+			name: newChannelName.toLowerCase().replaceAll(' ', '-'),
+			timestamp: Timestamp.fromDate(new Date()),
+
+			user: activeUser,
+		}).catch((error) => alert(error));
 	};
 
 	/**
@@ -70,6 +106,7 @@ const HomePage: FunctionComponent = () => {
 		const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
 			if (!user) {
 				dispatch(setActiveUser(undefined));
+				dispatch(setSelectedChannel(undefined));
 
 				return;
 			}
@@ -96,16 +133,17 @@ const HomePage: FunctionComponent = () => {
 
 						{activeUser && (
 							<>
-								<HeaderButton icon={faPlus} onClick={handleButtonClick} />
+								<HeaderButton icon={faPlus} onClick={handleAddButtonClick} />
 							</>
 						)}
 					</Header>
 
-					<div style={{ flexGrow: 1 }} />
-
 					{activeUser && (
 						<>
+							<ChannelList />
+
 							<UserSection user={activeUser}>
+								<UserSectionButton icon={faCog} onClick={handleButtonClick} />
 								<UserSectionButton icon={faSignOutAlt} onClick={handleSignOutButtonClick} />
 							</UserSection>
 						</>
@@ -114,9 +152,28 @@ const HomePage: FunctionComponent = () => {
 
 				<Chat>
 					<Header>
-						<div style={{ flexGrow: 1 }} />
+						{selectedChannel ? (
+							<>
+								<HeaderIcon icon={faHashtag} />
 
-						{!activeUser && (
+								<HeaderTitle>{selectedChannel.name}</HeaderTitle>
+							</>
+						) : (
+							<>
+								<div style={{ flexGrow: 1 }} />
+							</>
+						)}
+
+						{activeUser ? (
+							<>
+								<HeaderButton icon={faHashtag} onClick={handleButtonClick} />
+								<HeaderButton icon={faBell} onClick={handleButtonClick} />
+								<HeaderButton icon={faThumbtack} onClick={handleButtonClick} />
+								<HeaderButton icon={faUserFriends} onClick={handleButtonClick} />
+								<HeaderButton icon={faInbox} onClick={handleButtonClick} />
+								<HeaderButton icon={faQuestionCircle} onClick={handleButtonClick} />
+							</>
+						) : (
 							<>
 								<HeaderButton caption='Log in' onClick={handleSignInButtonClick} />
 							</>
