@@ -14,6 +14,16 @@ const StyledMessageList = styled.ul`
 	justify-content: stretch;
 
 	padding: 32px 8px;
+
+	list-style-type: none;
+
+	& > * {
+		margin-bottom: 16px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
 `;
 
 const MessageList: FunctionComponent = () => {

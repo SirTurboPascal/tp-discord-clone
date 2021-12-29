@@ -35,7 +35,7 @@ interface AvatarProps {
 const Avatar: FunctionComponent<AvatarProps> = (props) => {
 	return (
 		<>
-			<StyledAvatar>
+			<StyledAvatar className='avatar'>
 				<FontAwesomeIcon icon={faComment} style={{ margin: 'auto' }} fixedWidth />
 
 				{props.photoUrl && (

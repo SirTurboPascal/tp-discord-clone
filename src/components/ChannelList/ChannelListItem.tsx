@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styled from 'styled-components';
-import { deleteDoc, doc, getFirestore, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, getFirestore, updateDoc } from 'firebase/firestore';
 import { FunctionComponent } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -139,9 +139,17 @@ const ChannelListItem: FunctionComponent<ChannelListItemProps> = (props) => {
 			return;
 		}
 
-		deleteDoc(doc(getFirestore(), 'channels/' + id)).catch((error) => {
-			alert(error);
-		});
+		getDocs(collection(getFirestore(), 'channels/' + id + '/messages'))
+			.then((docs) => {
+				docs.forEach((document) => {
+					deleteDoc(doc(getFirestore(), document.ref.path));
+				});
+			})
+			.then(() => {
+				deleteDoc(doc(getFirestore(), 'channels', id)).catch((error) => {
+					alert(error);
+				});
+			});
 	};
 
 	const handleUpdateButtonClick = (channel: IChannel) => {
